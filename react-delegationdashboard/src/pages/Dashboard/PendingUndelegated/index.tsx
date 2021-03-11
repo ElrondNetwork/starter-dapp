@@ -22,7 +22,7 @@ const UndelegatedListView = () => {
     undelegatedList: UndelegatedValueType[]
   ) => {
     const element = new UndelegatedValueType(
-      denomintateValue(value.returnData[index].asBigInt.toString()).toString(),
+      denomintateValue(value.returnData[index].asBigInt.toFixed()).toString(),
       value.returnData[index + 1].asNumber * 6
     );
     undelegatedList.push(element);

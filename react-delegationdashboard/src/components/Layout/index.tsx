@@ -1,4 +1,5 @@
 import { QueryResponse } from '@elrondnetwork/erdjs/out/smartcontracts/query';
+import BigNumber from 'bignumber.js';
 import denominate from 'components/Denominate/formatters';
 import { denomination, decimals } from 'config';
 import { useContext, useDispatch } from 'context';
@@ -31,13 +32,13 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
     let initialOwnerFunds = denominate({
       decimals,
       denomination,
-      input: value.returnData[3].asBigInt.toString(),
+      input: value.returnData[3].asBigInt.toFixed(),
       showLastNonZeroDecimal: false,
     });
     return new ContractOverview(
       value.returnData[0].asHex.toString(),
       (value.returnData[1].asNumber / 100).toString(),
-      value.returnData[2].asBigInt.toString(),
+      value.returnData[2].asBigInt.toFixed(),
       initialOwnerFunds,
       value.returnData[4]?.asString,
       value.returnData[5].asBool,
@@ -96,7 +97,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
           });
           dispatch({
             type: 'setTotalActiveStake',
-            totalActiveStake: activeStake.asBigInt.toString(),
+            totalActiveStake: activeStake.asBigInt.toFixed(),
           });
           dispatch({
             type: 'setNumberOfActiveNodes',
@@ -108,16 +109,16 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
               stats: new Stats(networkStats.Epoch),
               networkConfig: new NetworkConfig(
                 networkConfig.TopUpFactor,
-                networkConfig.TopUpRewardsGradientPoint
+                new BigNumber(networkConfig.TopUpRewardsGradientPoint)
               ),
               networkStake: new NetworkStake(
                 networkStake.TotalValidators,
                 networkStake.ActiveValidators,
                 networkStake.QueueSize,
-                networkStake.TotalStaked
+                new BigNumber(networkStake.TotalStaked)
               ),
               blsKeys: blsKeys,
-              totalActiveStake: activeStake.asBigInt.toString(),
+              totalActiveStake: activeStake.asBigInt.toFixed(),
             }),
           });
         }

@@ -1,3 +1,6 @@
+import { Nonce } from '@elrondnetwork/erdjs/out';
+import BigNumber from 'bignumber.js';
+
 export class ContractOverview {
   ownerAddress: string;
   serviceFee?: string;
@@ -38,12 +41,12 @@ export class NetworkStake {
   totalValidators: number;
   activeValidators: number;
   queueSize: number;
-  totalStaked: BigInt;
+  totalStaked: BigNumber;
   public constructor(
     totalValidators: number,
     activeValidators: number,
     queueSize: number,
-    totalStaked: BigInt
+    totalStaked: BigNumber
   ) {
     this.totalValidators = totalValidators;
     this.activeValidators = activeValidators;
@@ -61,8 +64,8 @@ export class Stats {
 
 export class NetworkConfig {
   topUpFactor: number;
-  topUpRewardsGradientPoint: BigInt;
-  public constructor(topUpFactor: number, topUpRewardsGradientPoint: BigInt) {
+  topUpRewardsGradientPoint: BigNumber;
+  public constructor(topUpFactor: number, topUpRewardsGradientPoint: BigNumber) {
     this.topUpFactor = topUpFactor;
     this.topUpRewardsGradientPoint = topUpRewardsGradientPoint;
   }
@@ -76,5 +79,14 @@ export class AgencyMetadata {
     this.name = name;
     this.website = website;
     this.keybase = keybase;
+  }
+}
+
+export class AccountType {
+  balance: string;
+  nonce: Nonce;
+  public constructor(balance: string = '', nonce: Nonce) {
+    this.balance = balance;
+    this.nonce = nonce;
   }
 }
