@@ -8,11 +8,15 @@ import Denominate from 'components/Denominate';
 import { denomination, decimals } from 'config';
 import { object, string } from 'yup';
 import { ActionModalType } from 'helpers/types';
+import DelegationContractActionButtons from 'components/DelegationContractActionButtons';
 
 const UndelegateModal = ({
   show,
   title,
+  waitingForLedger,
+  submitPressed,
   balance,
+  ledgerError,
   description,
   handleClose,
   handleContinue,
@@ -30,14 +34,16 @@ const UndelegateModal = ({
   const UndelegateSchema = object().shape({
     amount: string()
       .required('Required')
-      .test('minimum', `Minimum 10 ${egldLabel}`, (value) => {
+      .test('minimum', `Minimum 10 ${egldLabel}`, value => {
         const bnAmount = new BigNumber(value !== undefined ? value : '');
         return bnAmount.comparedTo(10) >= 0;
       })
-      .test('dustLeft', `You can not keep under 10 ${egldLabel}. Use the Max option.`, (value) => {
+      .test('dustLeft', `You can not keep under 10 ${egldLabel}. Use the Max option.`, value => {
         const bnAmount = new BigNumber(value !== undefined ? value : '');
         const bnAvailable = new BigNumber(available);
-        return (bnAvailable.minus(bnAmount)).comparedTo(10) >= 0 || bnAvailable.comparedTo(bnAmount) == 0;
+        return (
+          bnAvailable.minus(bnAmount).comparedTo(10) >= 0 || bnAvailable.comparedTo(bnAmount) == 0
+        );
       }),
   });
   return (
@@ -52,12 +58,12 @@ const UndelegateModal = ({
             initialValues={{
               amount: '10',
             }}
-            onSubmit={(values) => {
+            onSubmit={values => {
               handleContinue(values.amount.toString());
             }}
             validationSchema={UndelegateSchema}
           >
-            {(props) => {
+            {props => {
               const {
                 handleSubmit,
                 values,
@@ -116,19 +122,14 @@ const UndelegateModal = ({
                       </small>
                     )}
                   </div>
-                  <div className="d-flex justify-content-center align-items-center flex-wrap">
-                    <button
-                      type="submit"
-                      className="btn btn-primary mx-2"
-                      id="continueDelegate"
-                      data-testid="continueUndelegate"
-                    >
-                      Continue
-                    </button>
-                    <button id="closeButton" className="btn btn-link mx-2" onClick={handleClose}>
-                      Close
-                    </button>
-                  </div>
+                  <DelegationContractActionButtons
+                    ledgerError={ledgerError}
+                    action="Undelegate"
+                    actionTitle="Continue"
+                    submitPressed={submitPressed}
+                    waitingForLedger={waitingForLedger}
+                    handleClose={handleClose}
+                  />
                 </form>
               );
             }}

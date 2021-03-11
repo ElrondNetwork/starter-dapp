@@ -1,5 +1,11 @@
-import { IDappProvider, ProxyProvider, ApiProvider, WalletProvider } from '@elrondnetwork/erdjs';
-import { AgencyMetadata, ContractOverview } from 'helpers/contractDataDefinitions';
+import {
+  IDappProvider,
+  ProxyProvider,
+  ApiProvider,
+  WalletProvider,
+  Nonce,
+} from '@elrondnetwork/erdjs';
+import { AccountType, AgencyMetadata, ContractOverview } from 'helpers/contractDataDefinitions';
 import { denomination, decimals, network, NetworkType } from '../config';
 import { getItem } from '../storage/session';
 
@@ -38,10 +44,14 @@ export interface StateType {
   aprPercentage: string;
   contractOverview: ContractOverview;
   agencyMetaData: AgencyMetadata;
+  ledgerAccount?: {
+    index: number;
+    address: string;
+  };
 }
 export const emptyAccount: AccountType = {
   balance: '...',
-  nonce: 0,
+  nonce: new Nonce(0),
 };
 
 export const emptyAgencyMetaData: AgencyMetadata = {
@@ -97,10 +107,12 @@ export const initialState = () => {
     numUsers: 0,
     totalActiveStake: '...',
     aprPercentage: '...',
+    ledgerAccount:
+      getItem('ledgerAccountIndex') && getItem('address')
+        ? {
+            index: getItem('ledgerAccountIndex'),
+            address: getItem('address'),
+          }
+        : undefined,
   };
 };
-
-export interface AccountType {
-  balance: string;
-  nonce: number;
-}
