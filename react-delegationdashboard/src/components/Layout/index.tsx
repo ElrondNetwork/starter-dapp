@@ -124,7 +124,7 @@ const Layout = ({ children, page }: { children: React.ReactNode; page: string })
         }
       )
       .catch(e => {
-        console.log('To do ', e);
+        console.error('To do ', e);
       });
   }, []);
 
